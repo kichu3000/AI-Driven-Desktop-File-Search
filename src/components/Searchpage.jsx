@@ -12,6 +12,10 @@ function SearchPage(){
                 <p>Search using natural language</p>
             </div>
 
+            <div className="input-box">
+                <input type="text" name="input" id="input" />
+            </div>
+
         </div>
     </div>
     )

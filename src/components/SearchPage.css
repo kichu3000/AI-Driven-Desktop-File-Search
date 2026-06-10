@@ -11,8 +11,22 @@
     flex-direction: column;
     align-items: center;
     text-align: center;
-    transform: translateY(-200px); /* moves slightly upward */
+    transform: translateY(-200px);
 }
-.main-heading{
-    /* todo */
+.main-heading h1 {
+    font-size:2.2rem;
+
+}
+.input-box input {
+    width: 700px;
+    height: 50px;
+    padding: 0 15px;
+    border-radius: 3px;
+    font-size: 16px;
+    border: none;
+}
+.caption p{
+    color: gray;
+    margin: 0;
+    padding-bottom: 20px;
 }
