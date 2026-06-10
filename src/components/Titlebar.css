@@ -1,0 +1,39 @@
+.title-bar {
+    height: 60px;
+    background: #0b1020;
+
+    display: flex;
+    align-items: center;
+
+    padding: 0 25px;
+
+
+}
+
+.logo {
+    width: 30px;
+    height: 30px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background: #5f95c8;
+    color: white;
+
+    border-radius: 6px;
+
+    font-size: 18px;
+}
+
+.title {
+    margin-left: 16px;
+
+    font-size: 16px;
+    
+
+    color: #e6edf3;
+}
+h3 {
+    font-weight: normal;
+}
