@@ -1,8 +1,11 @@
 import "./SearchPage.css"
+import { Search } from "lucide-react";
 
 function SearchPage(){
-    return(
 
+    let currentPlaceholder = "Life's too fast to remember every filename."
+
+    return(
     <div className="container">
         <div className="heading">
             <div className="main-heading">
@@ -13,7 +16,8 @@ function SearchPage(){
             </div>
 
             <div className="input-box">
-                <input type="text" name="input" id="input" />
+                <Search className="search-icon" size={20} />
+                <input type="text" name="input" id="input" placeholder={currentPlaceholder}/>
             </div>
 
         </div>
