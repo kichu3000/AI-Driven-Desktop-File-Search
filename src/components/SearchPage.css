@@ -1,5 +1,5 @@
 .container {
-    height: 100vh;
+     min-height: 40vh;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -11,14 +11,20 @@
     flex-direction: column;
     align-items: center;
     text-align: center;
-    transform: translateY(-200px);
+    /* transform: translateY(-200px); */
 }
 .main-heading h1 {
     font-size:2.2rem;
 
 }
+.input {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
 .input-box{
-    width: 700px;
+    width: 56.25rem;
     height: 50px;
 
     display: flex;
@@ -70,21 +76,22 @@
 }
 
 .button button{
-    width: 730px;
+    width: 130px;
     height: 50px;
 
     display: flex;
     align-items: center;
     justify-content: center;
+    gap: 8px;
 
-    background-color: #5B8CFF;
+    background-color: #3461cb;
     border: 1px solid #4A5060;
     border-radius: 8px;
 
     padding: 0 15px;
     margin-top: 20px;
     color: #FFF;
-    font-size: 1rem;
+    font-size: .8rem;
     cursor: pointer;
     transition: all 0.2s ease;
 

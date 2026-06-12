@@ -25,13 +25,14 @@ function SearchPage(){
             <div className="caption">
                 <p>Search using natural language</p>
             </div>
-
-            <div className="input-box">
-                <Search className="search-icon" size={20} />
-                <input type="text" name="input" id="input" placeholder={currentPlaceholder}/>
-            </div>
-            <div className="button">
-                <button type="submit">Search</button>
+            <div className="input">
+                <div className="input-box">
+                    <Search className="search-icon" size={20} />
+                    <input type="text" name="input" id="input" placeholder={currentPlaceholder}/>
+                </div>
+                <div className="button">
+                    <button type="submit"> <Search size={16} /> Search</button>
+                </div>
             </div>
 
         </div>
