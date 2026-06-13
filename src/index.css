@@ -1,3 +1,8 @@
+/* for debug */
+/* * {
+    outline: 1px solid red;
+} */
+
 :root {
   --text: #6b6375;
   --text-h: #08060d;
@@ -54,6 +59,7 @@ body {
     margin: 0;
     background:#23262F;
     font-family: "Poppins", sans-serif;
+    overflow-x: hidden;
 }
 
 #root {
@@ -110,4 +116,10 @@ code {
   line-height: 135%;
   padding: 4px 8px;
   background: var(--code-bg);
+}
+
+
+.app-container{
+    padding: 0 20px;
+    box-sizing: border-box;
 }

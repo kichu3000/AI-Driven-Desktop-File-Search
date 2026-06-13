@@ -1,8 +1,9 @@
 .container {
-     min-height: 40vh;
+    min-height: 40vh;
     display: flex;
     justify-content: center;
     align-items: center;
+    margin: 0 10px;
 }
 
 
@@ -21,10 +22,15 @@
     display: flex;
     align-items: center;
     gap: 12px;
+    margin: 0 20px;
+
+    width: 100%;
+    max-width: 60rem;
+    box-sizing: border-box;
 }
 
 .input-box{
-    width: 56.25rem;
+    width: 60rem;
     height: 50px;
 
     display: flex;

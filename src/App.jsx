@@ -1,12 +1,13 @@
 import TitleBar from "./components/Titlebar";
 import SearchPage from "./components/Searchpage";
-import ResultCard from "./components/Resultcard";
+import Result from "./components/Result";
+import "./index.css"
 function App(){
     return(
-        <div>
-            <TitleBar/>
-            <SearchPage/>
-            <ResultCard />
+        <div className="app-container">
+            <TitleBar />
+            <SearchPage />
+            <Result />  
         </div>
     )
 }
