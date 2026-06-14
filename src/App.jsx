@@ -9,7 +9,6 @@ function App(){
             <TitleBar />
             <SearchPage />
             <Result />
-            <NoInternet/>
         </div>
     )
 }
