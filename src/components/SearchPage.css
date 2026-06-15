@@ -1,0 +1,114 @@
+.container {
+    min-height: 40vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0 10px;
+}
+
+
+.heading {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    /* transform: translateY(-200px); */
+}
+.main-heading h1 {
+    font-size:2.2rem;
+
+}
+.input {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 0 20px;
+
+    width: 100%;
+    max-width: 60rem;
+    box-sizing: border-box;
+}
+
+.input-box{
+    width: 60rem;
+    height: 50px;
+
+    display: flex;
+    align-items: center;
+
+    background-color: #343A46;
+    border: 1px solid #4A5060;
+    border-radius: 8px;
+
+    padding: 0 15px;
+    margin-top: 20px;
+
+    transition:
+        border-color 0.5s ease,
+        box-shadow 0.5s ease;
+}
+
+.input-box:focus-within {
+    border-color: #2962FF;
+    box-shadow: 0 0 8px rgba(41, 98, 255, 0.4);
+}
+
+.input-box input {
+    flex: 1;
+
+    background: transparent;
+    border: none;
+    outline: none;
+
+    color: white;
+    font-size: 16px;
+
+    margin-left: 10px;
+}
+
+.input-box input::placeholder {
+    color: #A0A7B8;
+}
+
+.search-icon {
+    color: #A0A7B8;
+}
+
+
+.caption p{
+    color: gray;
+    margin: 0;
+    padding-bottom: 20px;
+}
+
+.button button{
+    width: 130px;
+    height: 50px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+
+    background-color: #3461cb;
+    border: 1px solid #4A5060;
+    border-radius: 8px;
+
+    padding: 0 15px;
+    margin-top: 20px;
+    color: #FFF;
+    font-size: .8rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+
+}
+.button button:hover {
+    background-color: #2563EB;
+    transform: translateY(-1px);
+    box-shadow: 0 6px 15px rgba(37, 99, 235, 0.3);
+}
+
+.button button:active {
+    transform: translateY(0px);
+    box-shadow: none;
+}

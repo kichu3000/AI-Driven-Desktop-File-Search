@@ -1,0 +1,40 @@
+.title-bar {
+    height: 60px;
+    background: #23262F;
+
+    display: flex;
+    align-items: center;
+
+    padding: 0 25px;
+    box-shadow: 0 2px 8px rgba(44, 44, 70, 0.25);
+
+
+}
+
+.logo {
+    width: 28px;
+    height: 28px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    color: white;
+
+    border-radius: 6px;
+
+    background-color: rgba(29, 64, 64, 0.115);
+    font-size: 18px;
+}
+
+.title {
+    margin-left: 10px;
+
+    font-size: 16px;
+    
+
+    color: #e6edf3;
+}
+h3 {
+    font-weight: normal;
+}

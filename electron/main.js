@@ -2,8 +2,10 @@ import {app, BrowserWindow } from "electron";
 
 function createWindow() {
     const win = new BrowserWindow({
-    width: 1200,
-    height: 1000,
+    width: 1250,
+    height: 700,
+    minWidth: 1200,
+    minHeight: 600
     });
 
     win.loadURL("http://localhost:5173");
