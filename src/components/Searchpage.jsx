@@ -4,17 +4,20 @@ import placeholder from "../assets/placeholder.json"
 import { useEffect,useState } from "react";
 import { GiButtonFinger } from "react-icons/gi";
 
-function SearchPage(){
 
+function SearchPage(){
+    
     const[currentPlaceholder,setCurrentPlaceholder] = useState("");
+    function getRandomPlaceholder(){
+            const randomIndex = Math.floor(Math.random() * placeholder.placeholders.length);
+            console.log(randomIndex);
+            setCurrentPlaceholder(placeholder.placeholders[randomIndex]);
+    }  
 
     useEffect(() => {
-        const randomIndex = Math.floor(Math.random() * placeholder.placeholders.length);
-        console.log(randomIndex);
-        setCurrentPlaceholder(placeholder.placeholders[randomIndex]);
+        getRandomPlaceholder();
     },[]);
-    
-    
+
 
     return(
     <div className="container">
