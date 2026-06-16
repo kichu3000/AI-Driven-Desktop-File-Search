@@ -3,6 +3,7 @@ import { Search } from "lucide-react";
 import placeholder from "../assets/placeholder.json"
 import { useEffect,useState } from "react";
 import { GiButtonFinger } from "react-icons/gi";
+import { searchApi } from "../services/searchApi";
 
 
 
@@ -21,8 +22,14 @@ function SearchPage(){
     },[]);
 
     
-    const handleSearch = () => {
-        console.log(query);
+    const handleSearch = async () => {
+        const start = Date.now();
+        const result = await searchApi(
+            "give me the resume file from june 2025"
+        );
+        const end = Date.now();
+        console.log(result);
+        console.log(`time taken : ${end - start} ms`);
         
     }
 
