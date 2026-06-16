@@ -5,9 +5,11 @@ import { useEffect,useState } from "react";
 import { GiButtonFinger } from "react-icons/gi";
 
 
+
 function SearchPage(){
-    
+    const[query,setQuery] = useState("");
     const[currentPlaceholder,setCurrentPlaceholder] = useState("");
+
     function getRandomPlaceholder(){
             const randomIndex = Math.floor(Math.random() * placeholder.placeholders.length);
             console.log(randomIndex);
@@ -17,6 +19,13 @@ function SearchPage(){
     useEffect(() => {
         getRandomPlaceholder();
     },[]);
+
+    
+    const handleSearch = () => {
+        console.log(query);
+        
+    }
+
 
 
     return(
@@ -31,10 +40,16 @@ function SearchPage(){
             <div className="input">
                 <div className="input-box">
                     <Search className="search-icon" size={20} />
-                    <input type="text" name="input" id="input" placeholder={currentPlaceholder}/>
+                    <input type="text" 
+                    name="input" 
+                    id="input" 
+                    placeholder={currentPlaceholder}
+                    value={query}
+                    onChange={(e) => setQuery(e.target.value)}
+                    />
                 </div>
                 <div className="button">
-                    <button type="submit"> <Search size={16} /> Search</button>
+                    <button onClick={handleSearch}> <Search size={16} /> Search</button>
                 </div>
             </div>
 
