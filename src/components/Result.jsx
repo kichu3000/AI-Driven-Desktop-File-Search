@@ -1,6 +1,7 @@
 import ResultCard from "./Resultcard"
 import "./Result.css"
 import NoInternet from "./Nointernet";
+import LoadingState from "./loadingState";
 
 function Result(){
 
@@ -19,6 +20,7 @@ function Result(){
             <ResultCard />
         </div>
         <NoInternet/>
+        <LoadingState/>
     </div>
     );
 }
