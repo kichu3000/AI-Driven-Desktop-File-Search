@@ -69,6 +69,16 @@
 
     color: #9CA3AF;
 }
+@keyframes spin {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}
+
 .spinner {
     animation: spin 1s linear infinite;
 }

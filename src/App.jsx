@@ -8,7 +8,6 @@ function App(){
         <div className="app-container">
             <TitleBar />
             <SearchPage />
-            <Result />
         </div>
     )
 }
