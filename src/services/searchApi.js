@@ -21,15 +21,13 @@ export async function searchApi(userInput){
     - "top 10" → limit=10
     `;
 
-    const API_KEY = "Nothing"
-
 
     try{
         const response = await fetch(url,
             {
                 method : "POST",
                 headers: {
-                "Authorization": `Bearer ${API_KEY}`,
+                "Authorization": `Bearer ${import.meta.env.VITE_OPENROUTER_API_KEY}`,
                 "Content-Type": "application/json"
                 }, 
                 body : JSON.stringify({

@@ -25,7 +25,7 @@ function SearchPage(){
     const handleSearch = async () => {
         const start = Date.now();
         const result = await searchApi(
-            "give me the resume file from june 2025"
+            "give me all the bigger mp3 files"
         );
         const end = Date.now();
         console.log(result);
