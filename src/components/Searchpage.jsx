@@ -4,6 +4,8 @@ import placeholder from "../assets/placeholder.json"
 import { useEffect,useState } from "react";
 import { GiButtonFinger } from "react-icons/gi";
 import { searchApi } from "../services/searchApi";
+import {searchFiles} from "../services/searchEngine"
+
 import Result from "./Result";
 
 
@@ -31,6 +33,7 @@ function SearchPage(){
             const result = await searchApi(
                 "give me all the bigger mp3 files"
             );
+            searchFiles(); // for test
             console.log(result);
         }
         catch(error){
