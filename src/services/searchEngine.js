@@ -1,4 +1,7 @@
 import * as fs from "node:fs/promises"
+import path from "node:path"
+import os, { homedir } from "node:os"
+import { ReceiptRussianRuble } from "lucide-react";
 
 const searchQuerySchema = {
         drive: null,
@@ -23,11 +26,12 @@ export async function searchFiles(filters){ //"filters" is the json return by th
         ...searchQuerySchema,  //The spread operator is used here to merge the filters and the schema into a single variable.
         ...filters
     }
+
+
     const normalizeFilter = (data) => { // Used to ensure the json format is correct.
         const cleaned = {... data}
 
         //Numbers fix
-        //----------
         if(cleaned.minSizeMB !== null && cleaned.minSizeMB !== undefined){ //minSizeMB
             cleaned.minSizeMB = Number(cleaned.minSizeMB);
             if(Number.isNaN(cleaned.minSizeMB)) cleaned.minSizeMB = null;
@@ -71,7 +75,22 @@ export async function searchFiles(filters){ //"filters" is the json return by th
         }
         return cleaned;
     }
-    const normalizedQuery = normalizeFilter(query);
 
-    return normalizedQuery;
+
+    const getSearchRoots = (query) => {//Ffor the starting
+        const home = os.homedir
+        if(query.drive && query.folder){
+            return path.join(query.drive,query.folder);
+        }
+        if(query.drive){
+            return query.drive + "\\"
+        }
+
+        if(query.folder) {
+            return path.join(home,folder);
+        }
+
+        return home;
+    }
+    
 }
