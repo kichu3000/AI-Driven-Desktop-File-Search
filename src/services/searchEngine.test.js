@@ -1,9 +1,6 @@
-import assert from "node:assert"
-import { searchFiles } from "./searchEngine.js"
+import { getSearchRoots } from "./searchEngine.js"
 
-const result = await searchFiles({
-    limit : 10
-})
 
-assert.strictEqual(result.limit,"10")
-console.log(result);
+console.log(getSearchRoot({ drive: "E:", folder: "Downloads" }));
+console.log(getSearchRoot({ folder: "Documents" }));
+console.log(getSearchRoot({}));

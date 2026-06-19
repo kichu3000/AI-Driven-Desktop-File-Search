@@ -77,8 +77,8 @@ export async function searchFiles(filters){ //"filters" is the json return by th
     }
 
 
-    const getSearchRoots = (query) => {//Ffor the starting
-        const home = os.homedir
+    const getSearchRoot = (query) => {//Ffor the starting
+        const home = os.homedir()
         if(query.drive && query.folder){
             return path.join(query.drive,query.folder);
         }
@@ -87,10 +87,16 @@ export async function searchFiles(filters){ //"filters" is the json return by th
         }
 
         if(query.folder) {
-            return path.join(home,folder);
+            return path.join(home,query.folder);
         }
+
 
         return home;
     }
+    // console.log(getSearchRoot({ drive: "E:", folder: "Downloads" }));
+    // console.log(getSearchRoot({ folder: "Documents" }));
+    // console.log(getSearchRoot({}));
+    
     
 }
+// searchFiles(); //for test
