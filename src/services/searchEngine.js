@@ -1,7 +1,6 @@
 import * as fs from "node:fs/promises"
 import path from "node:path"
 import os, { homedir } from "node:os"
-import { ReceiptRussianRuble } from "lucide-react";
 
 const searchQuerySchema = {
         drive: null,
@@ -122,7 +121,17 @@ export async function searchFiles(filters){ //"filters" is the json return by th
         return true;
         
     }
+    const matchesFileName = (filename,query) => {
+        if(query.filenameKeywords.length === 0) return true;
 
+        const nameWithoutExtension = path.basename(filename,path.extname(filename)).toLowerCase();
+        for(const name of query.filenameKeywords){
+            if(nameWithoutExtension.includes(name.toLowerCase()))
+                return true;
+        }
+        return false;        
+    }
+    
 
 }
 //searchFiles(); //for test

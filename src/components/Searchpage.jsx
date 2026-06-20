@@ -32,7 +32,7 @@ function SearchPage(){
             const result = await searchApi(
                 "give me all the bigger mp3 files"
             );
-            searchFiles(); // for test
+            //searchFiles(); // for test
             console.log(result);
         }
         catch(error){
