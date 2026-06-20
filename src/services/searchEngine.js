@@ -1,6 +1,7 @@
 import * as fs from "node:fs/promises"
 import path from "node:path"
 import os, { homedir } from "node:os"
+import test from "node:test";
 
 const searchQuerySchema = {
         drive: null,
@@ -131,15 +132,17 @@ export async function searchFiles(filters){ //"filters" is the json return by th
         }
         return false;        
     }
-    const matchsContent = async (filePath,query) => {
+    const matchesContent = async (filePath,query) => {
         if(query.contentKeywords.length === 0) return true;
         try{
             const content = await fs.readFile(filePath,"utf-8");
             const text = content.toLowerCase();
-
+            // console.log(query.contentKeywords);
+            // console.log(text);
+            
             for(const keyWord of query.contentKeywords){
-                if(!text.includes(text))
-                    return false
+                if(!text.includes(keyWord))
+                    return false;
             }
             return true;
         }
