@@ -131,7 +131,23 @@ export async function searchFiles(filters){ //"filters" is the json return by th
         }
         return false;        
     }
-    
+    const matchsContent = async (filePath,query) => {
+        if(query.contentKeywords.length === 0) return true;
+        try{
+            const content = await fs.readFile(filePath,"utf-8");
+            const text = content.toLowerCase();
+
+            for(const keyWord of query.contentKeywords){
+                if(!text.includes(text))
+                    return false
+            }
+            return true;
+        }
+        catch(err){
+            return false;
+            console.error(err);
+        }
+    }
 
 }
 //searchFiles(); //for test
