@@ -77,7 +77,7 @@ export async function searchFiles(filters){ //"filters" is the json return by th
     }
 
 
-    const getSearchRoot = (query) => {//Ffor the starting
+    const getSearchRoot = (query) => {//For the starting of search
         const home = os.homedir()
         if(query.drive && query.folder){
             return path.join(query.drive,query.folder);
@@ -89,14 +89,39 @@ export async function searchFiles(filters){ //"filters" is the json return by th
         if(query.folder) {
             return path.join(home,query.folder);
         }
-
-
         return home;
     }
-    // console.log(getSearchRoot({ drive: "E:", folder: "Downloads" }));
-    // console.log(getSearchRoot({ folder: "Documents" }));
-    // console.log(getSearchRoot({}));
-    
-    
+
+
+    const scanDirectory = () =>{
+
+        const EXCLUDED_FOLDERS = [
+        "Windows",
+        "Program Files",
+        "Program Files (x86)",
+        "ProgramData",
+        "$Recycle.Bin",
+        "System Volume Information",
+        "node_modules",
+        ".git"
+        ];
+
+        //do logic
+    }
+
+
+    const matchesFileType = (filename,query) => {
+        const extension = path.extname(filename).toLowerCase();
+
+        if(query.includeFileTypes.length > 0  &&  !query.includeFileTypes.includes(extension))
+            return false;
+
+        if(query.excludeFileTypes.includes(extension))
+            return false;
+
+        return true;
+    }
+
+
 }
-// searchFiles(); //for test
+//searchFiles(); //for test
