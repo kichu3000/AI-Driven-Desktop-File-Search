@@ -110,7 +110,7 @@ export async function searchFiles(filters){ //"filters" is the json return by th
     }
 
 
-    const matchesFileType = (filename,query) => {
+    const matchesFileType = (filename,query) => {   //This function is to returns a boolean based on the includeFileTypes,excludeFileTypes arrays.
         const extension = path.extname(filename).toLowerCase();
 
         if(query.includeFileTypes.length > 0  &&  !query.includeFileTypes.includes(extension))
@@ -120,6 +120,7 @@ export async function searchFiles(filters){ //"filters" is the json return by th
             return false;
 
         return true;
+        
     }
 
 
