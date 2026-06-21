@@ -224,36 +224,62 @@ export async function searchFiles(filters){ //"filters" is the json return by th
         ".git"
         ];
 
-        const items = await fs.readdir(dirPath,{withFileTypes : true});
-
-        for(const item of items){
-
-            const fullPath = path.join(dirPath,item.name);
-            if(item.isDirectory() && EXCLUDED_FOLDERS.includes(item.name)){
-                console.log("Excluded folders .. skip it ..");
-                continue;
-            }
-            if(item.isDirectory()){
-                await scanDirectory(fullPath,query,results);
-                continue;
-            }
-            if(item.isFile()){
-
-                if(!matchesFileType(item.name,query))
+        try {
+            const items = await fs.readdir(dirPath,{withFileTypes : true});
+    
+            for(const item of items){
+    
+                const fullPath = path.join(dirPath,item.name);
+                if(item.isDirectory() && EXCLUDED_FOLDERS.includes(item.name)){
+                    console.log("Excluded folders .. skip it ..");
                     continue;
-
-                if(!matchesFileName(item.name,query))
+                }
+                if(item.isDirectory()){
+                    await scanDirectory(fullPath,query,results);
                     continue;
+                }
+                if(item.isFile()){
+                    let stats;
 
-                if(!(await(matchesContent(fullPath,query))))
-                    continue;
+                    try {
+                        stats = await fs.stat(fullPath);
+                    } 
 
-                results.push({
-                    name : item.name,
-                    path : fullPath
-                })
-                
+                    catch (error) {
+                        continue;
+                    }
+    
+                    if(!matchesFileType(item.name,query))
+                        continue;
+    
+                    if(!matchesFileName(item.name,query))
+                        continue;
+    
+                    if(!matchesFileSize(stats,query))
+                        continue;
+    
+                    if(!matchesCreatedDate(stats,query))
+                        continue;
+    
+                    if(!matchesModifiedDate(stats,query))
+                        continue;
+    
+                    if(!(await matchesContent(fullPath,query)))
+                        continue;
+    
+                    results.push({
+                        name : item.name,
+                        path : fullPath,
+                        size : stats.size,
+                        created : stats.birthtime,
+                        modified : stats.mtime
+                    })
+                    
+                }
             }
+        } catch (error){
+            console.log("Skipped...Something goes wrong, May be no permission",dirPath);
+            
         }
         return results;
     }
