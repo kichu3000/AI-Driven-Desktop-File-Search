@@ -44,6 +44,45 @@ export async function searchFiles(filters){ //"filters" is the json return by th
             if(Number.isNaN(cleaned.limit)) cleaned.limit = null;
         }
 
+        //Date fix
+        if(cleaned.createdFrom !== null && cleaned.createdFrom !== undefined){
+            const date = new Date(cleaned.createdFrom);
+            
+            if(Number.isNaN(date.getTime())){
+                cleaned.createdFrom = null
+            }else{
+                cleaned.createdFrom = date;
+            }
+        }
+
+        if(cleaned.createdTo !== null && cleaned.createdTo !== undefined){
+            const date = new Date(cleaned.createdTo);
+            
+            if(Number.isNaN(date.getTime())){
+                cleaned.createdTo = null
+            }else{
+                cleaned.createdTo = date;
+            }
+        }
+        if(cleaned.modifiedFrom !== null && cleaned.modifiedFrom !== undefined){
+            const date = new Date(cleaned.modifiedFrom);
+            
+            if(Number.isNaN(date.getTime())){
+                cleaned.modifiedFrom = null
+            }else{
+                cleaned.modifiedFrom = date;
+            }
+        }
+        if(cleaned.modifiedTo !== null && cleaned.modifiedTo !== undefined){
+            const date = new Date(cleaned.modifiedTo);
+            
+            if(Number.isNaN(date.getTime())){
+                cleaned.modifiedTo = null
+            }else{
+                cleaned.modifiedTo = date;
+            }
+        }
+
         //Arrays
         if(!Array.isArray(cleaned.includeFileTypes)){
             cleaned.includeFileTypes = cleaned.includeFileTypes ? [cleaned.includeFileTypes] : [];
@@ -132,6 +171,21 @@ export async function searchFiles(filters){ //"filters" is the json return by th
             console.error(err);
         }
     }
+
+    const matchesFileSize = (stat,query) => {
+        const fileSizeMB = stat.size / (1024 * 1024);
+
+        if(query.minSizeMB !== null){
+            if(fileSizeMB < query.minSizeMB) return false;
+        }
+        if(query.maxSizeMB !== null){
+            if(fileSizeMB > query.maxSizeMB) return false;
+        }
+        return true;
+    }
+
+
+
 
     const scanDirectory = async (dirPath,query,results = []) =>{ // The main function to search File in a recursive method
 
