@@ -1,7 +1,6 @@
 import * as fs from "node:fs/promises"
 import path from "node:path"
 import os, { homedir } from "node:os"
-import test from "node:test";
 
 const searchQuerySchema = {
         drive: null,
@@ -92,24 +91,6 @@ export async function searchFiles(filters){ //"filters" is the json return by th
         return home;
     }
 
-
-    const scanDirectory = () =>{
-
-        const EXCLUDED_FOLDERS = [
-        "Windows",
-        "Program Files",
-        "Program Files (x86)",
-        "ProgramData",
-        "$Recycle.Bin",
-        "System Volume Information",
-        "node_modules",
-        ".git"
-        ];
-
-        //do logic
-    }
-
-
     const matchesFileType = (filename,query) => {   //This function is to returns a boolean based on the includeFileTypes,excludeFileTypes arrays.
         const extension = path.extname(filename).toLowerCase();
 
@@ -151,6 +132,54 @@ export async function searchFiles(filters){ //"filters" is the json return by th
             console.error(err);
         }
     }
+
+    const scanDirectory = async (dirPath,query,results = []) =>{ // The main function to search File in a recursive method
+
+        const EXCLUDED_FOLDERS = [
+        "Windows",
+        "Program Files",
+        "Program Files (x86)",
+        "ProgramData",
+        "$Recycle.Bin",
+        "System Volume Information",
+        "node_modules",
+        ".git"
+        ];
+
+        const items = await fs.readdir(dirPath,{withFileTypes : true});
+
+        for(const item of items){
+
+            const fullPath = path.join(dirPath,item.name);
+            if(item.isDirectory() && EXCLUDED_FOLDERS.includes(item.name)){
+                console.log("Excluded folders .. skip it ..");
+                continue;
+            }
+            if(item.isDirectory()){
+                await scanDirectory(fullPath,query,results);
+                continue;
+            }
+            if(item.isFile()){
+
+                if(!matchesFileType(item.name,query))
+                    continue;
+
+                if(!matchesFileName(item.name,query))
+                    continue;
+
+                if(!(await(matchesContent(fullPath,query))))
+                    continue;
+
+                results.push({
+                    name : item.name,
+                    path : fullPath
+                })
+                
+            }
+        }
+        return results;
+    }
+
 
 }
 //searchFiles(); //for test
