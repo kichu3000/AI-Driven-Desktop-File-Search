@@ -172,8 +172,8 @@ export async function searchFiles(filters){ //"filters" is the json return by th
         }
     }
 
-    const matchesFileSize = (stat,query) => {
-        const fileSizeMB = stat.size / (1024 * 1024);
+    const matchesFileSize = (stats,query) => {
+        const fileSizeMB = stats.size / (1024 * 1024);
 
         if(query.minSizeMB !== null){
             if(fileSizeMB < query.minSizeMB) return false;
@@ -183,6 +183,18 @@ export async function searchFiles(filters){ //"filters" is the json return by th
         }
         return true;
     }
+    const matchesCreatedDate = (stats,query) => {
+        const fileCreatedDate = stats.birthtime;
+
+        if(query.createdFrom !== null){
+            if(fileCreatedDate < query.createdFrom) return false;
+        }
+        if(query.createdTo !== null){
+            if(fileCreatedDate > query.createdTo) return false;
+        }
+        return true;
+    }
+    
 
 
 
