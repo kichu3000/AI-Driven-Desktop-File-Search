@@ -194,7 +194,19 @@ export async function searchFiles(filters){ //"filters" is the json return by th
         }
         return true;
     }
-    
+
+    const matchesModifiedDate = (stats,query) => {
+        const fileModifiedDate = stats.mtime;
+
+        if(query.modifiedFrom !== null){
+            if(fileModifiedDate < query.modifiedFrom) return false;
+        }
+        if(query.modifiedTo !== null){
+            if(fileModifiedDate > query.modifiedTo) return false;
+        }
+        return true;
+    }
+
 
 
 
