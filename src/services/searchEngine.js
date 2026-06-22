@@ -284,6 +284,28 @@ export async function searchFiles(filters){ //"filters" is the json return by th
         return results;
     }
 
+    const sortResults = (results,query) => {
+        if(!query.sortBy) return results;
+
+        const order = query.sortOrder === 'desc' ? -1 : 1;
+
+        return results.sort((a,b) => {
+            switch (query.sortBy){
+
+                case 'name':
+                    return a.name.toLowerCase()
+                    .localCompare(b.name.toLowerCase()) * order;
+                case 'size':
+                    return (a.size - b.size) * order;
+                case 'created' :
+                    return (a.created - b.created) * order;
+                case 'modified':
+                    return (a.modified - b.modified) * order;
+                default :
+                    return 0;
+            }
+        });
+    };
 
 }
 //searchFiles(); //for test

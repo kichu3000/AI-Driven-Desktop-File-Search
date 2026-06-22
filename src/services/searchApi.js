@@ -19,6 +19,12 @@ export async function searchApi(userInput){
     - "last/this month/year" → createdFrom/createdTo
     - "bigger than XGB" → minSizeMB (MB converted)
     - "top 10" → limit=10
+    - "sort by name" → sortBy="name"
+    - "sort by size" → sortBy="size"
+    - "sort by date created" → sortBy="created"
+    - "sort by date modified" → sortBy="modified"
+    - "ascending" → sortOrder="asc"
+    - "descending" → sortOrder="desc"
     `;
 
 
