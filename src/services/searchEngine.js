@@ -2,6 +2,10 @@ import * as fs from "node:fs/promises"
 import path from "node:path"
 import os, { homedir } from "node:os"
 
+import { createRequire } from "node:module";
+const require = createRequire(import.meta.url);
+const pdf = require("pdf-parse");
+
 const searchQuerySchema = {
         drive: null,
         folder: null,
@@ -134,7 +138,10 @@ export async function searchFiles(filters){ //"filters" is the json return by th
     }
 
     const matchesFileType = (filename,query) => {   //This function is to returns a boolean based on the includeFileTypes,excludeFileTypes arrays.
+        const binaryExtensions = [".grp", ".exe", ".dll", ".bin", ".dat", ".pak"];
         const extension = path.extname(filename).toLowerCase();
+
+        if(binaryExtensions.includes(extension)) return false;
 
         if(query.includeFileTypes.length > 0  &&  !query.includeFileTypes.includes(extension))
             return false;
@@ -146,7 +153,7 @@ export async function searchFiles(filters){ //"filters" is the json return by th
         
     }
     const matchesFileName = (filename,query) => {
-        if(query.filenameKeywords.length === 0) return true;
+        if(query.filenameKeywords.length === 0 || query.filenameKeywords[0] === "") return true;
 
         const nameWithoutExtension = path.basename(filename,path.extname(filename)).toLowerCase();
         for(const name of query.filenameKeywords){
@@ -155,18 +162,37 @@ export async function searchFiles(filters){ //"filters" is the json return by th
         }
         return false;        
     }
-    const matchesContent = async (filePath,query) => {
-        if(query.contentKeywords.length === 0) return true;
+
+
+    const matchesContent = async (filePath,query) => { // Returns true only if ALL keywords in the query exist in the file content.
+        if(query.contentKeywords.length === 0 || !query.contentKeywords || query.contentKeywords[0] === "") return true;
         try{
-            const content = await fs.readFile(filePath,"utf-8");
-            const text = content.toLowerCase();
-            // console.log(query.contentKeywords);
-            // console.log(text);
-            
-            for(const keyWord of query.contentKeywords){
-                if(!text.includes(keyWord))
-                    return false;
+            const ext = path.extname(filePath).toLowerCase();
+
+            let text = "";
+
+            if (ext === ".pdf") {//Just for the PDF only
+                const buffer = await fs.readFile(filePath);
+                const data = await pdf(buffer);
+                text = data.text || "";
             }
+
+            else { // Other files such as .txt, .c, .js, .java, etc.... go here. These are compatible with UTF-8 encoding.
+                try {
+                    text = await fs.readFile(filePath, "utf-8");
+                } catch {
+                    return false; 
+                }
+            }
+
+            text = text.toLowerCase();
+
+            for (const keyWord of query.contentKeywords) {
+                if (!text.includes(keyWord.toLowerCase())) {
+                    return false;
+                }
+            }
+
             return true;
         }
         catch(err){
@@ -216,14 +242,41 @@ export async function searchFiles(filters){ //"filters" is the json return by th
         console.log("Scanning:", dirPath);
 
         const EXCLUDED_FOLDERS = [
-        "Windows",
-        "Program Files",
-        "Program Files (x86)",
-        "ProgramData",
-        "$Recycle.Bin",
-        "System Volume Information",
-        "node_modules",
-        ".git"
+            // Windows
+            "Windows",
+            "Program Files",
+            "Program Files (x86)",
+            "ProgramData",
+            "$Recycle.Bin",
+            "System Volume Information",
+            "AppData",
+            "steam",
+            "steamapps",
+            "SteamLibrary",
+
+            "node_modules",
+            ".git",
+            ".vs",
+            ".vscode",
+
+            "npm-cache",
+            ".npm",
+            ".cache",
+
+            "__pycache__",
+            ".venv",
+            "venv",
+            "dist",
+            "build",
+            "out",
+
+            ".idea",
+
+            "Temp",
+            "tmp",
+            "VirtualBox VMs",
+            ".gradle",
+            "target"
         ];
 
         try {
@@ -344,9 +397,12 @@ export async function searchFiles(filters){ //"filters" is the json return by th
 
     let results = await scanDirectory(searchRoot, normalizedQuery);
 
-    if(results.length === 0 && !normalizedQuery.drive){
+    if(results.length === 0){
+        if (normalizedQuery.drive) {
+            return results;
+        }
 
-        const fallbackDrives = ["D:", "E:", "F:"];
+        const fallbackDrives = ["D:", "E:"];
 
         for(const drive of fallbackDrives){
 
@@ -390,10 +446,10 @@ export async function searchFiles(filters){ //"filters" is the json return by th
 
 //For test
 const query = {
-    includeFileTypes: [".txt"],
+    includeFileTypes: [],
     excludeFileTypes: [],
-    filenameKeywords: ["hello"],
-    contentKeywords: ["hello"],
+    filenameKeywords: [],
+    contentKeywords: ["excludeFileTypes"],
 
     createdFrom: null,
     createdTo: null,
@@ -407,7 +463,6 @@ const query = {
     sortBy: "name",
     sortOrder: "asc",
 
-    limit: 5
 };
 console.time("Search");
 const results = await searchFiles(query);
