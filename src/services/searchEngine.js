@@ -301,11 +301,17 @@ export async function searchFiles(filters){ //"filters" is the json return by th
                     return (a.created - b.created) * order;
                 case 'modified':
                     return (a.modified - b.modified) * order;
-                default :
+                default:
                     return 0;
             }
         });
     };
+
+    const applyLimites = (results,query) => {
+        if(query.limit === null && query.limit === undefined)
+            return results;
+        return results.slice(0,query.limit);
+    }
 
 }
 //searchFiles(); //for test
