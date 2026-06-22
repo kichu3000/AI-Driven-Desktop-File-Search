@@ -110,6 +110,9 @@ export async function searchFiles(filters){ //"filters" is the json return by th
         //Just format the drive letter
         if(cleaned.drive && typeof cleaned.drive === "string"){
             cleaned.drive = cleaned.drive.toUpperCase();
+
+            if(!cleaned.drive.endsWith(':'))
+                cleaned.drive += ':';
         }
         return cleaned;
     }
@@ -206,12 +209,11 @@ export async function searchFiles(filters){ //"filters" is the json return by th
         }
         return true;
     }
-
-
-
-
+    
 
     const scanDirectory = async (dirPath,query,results = []) =>{ // The main function to search File in a recursive method
+
+        console.log("Scanning:", dirPath);
 
         const EXCLUDED_FOLDERS = [
         "Windows",
@@ -231,14 +233,16 @@ export async function searchFiles(filters){ //"filters" is the json return by th
     
                 const fullPath = path.join(dirPath,item.name);
                 if(item.isDirectory() && EXCLUDED_FOLDERS.includes(item.name)){
-                    console.log("Excluded folders .. skip it ..");
+                    console.log("Excluded folders : ",item.name);
                     continue;
                 }
                 if(item.isDirectory()){
+                    console.log("Directory:", fullPath);
                     await scanDirectory(fullPath,query,results);
                     continue;
                 }
                 if(item.isFile()){
+                    console.log("File Found:", fullPath);
                     let stats;
 
                     try {
@@ -249,23 +253,41 @@ export async function searchFiles(filters){ //"filters" is the json return by th
                         continue;
                     }
     
-                    if(!matchesFileType(item.name,query))
+                    if(!matchesFileType(item.name,query)){
+                        console.log("Type failed",item.name);
                         continue;
+                    }
     
-                    if(!matchesFileName(item.name,query))
+                    if(!matchesFileName(item.name,query)){
+                        console.log("Name failed",item.name);
                         continue;
+                    }
+                    console.log("Name passed",item.name);
+
+                    if(!matchesFileSize(stats,query)){
+                        console.log("Size failed",item.name);
+                        continue;
+                    }
+                    console.log("Size passed",item.name);
+
     
-                    if(!matchesFileSize(stats,query))
+                    if(!matchesCreatedDate(stats,query)){
+                        console.log("Creation date failed",item.name);
                         continue;
+                    }
+                    console.log("Creation date passed",item.name);
     
-                    if(!matchesCreatedDate(stats,query))
+                    if(!matchesModifiedDate(stats,query)){
+                        console.log("modified date failed",item.name);
                         continue;
+                    }
+                    console.log("modified date passed",item.name);
     
-                    if(!matchesModifiedDate(stats,query))
+                    if(!(await matchesContent(fullPath,query))){
+                        console.log("Content match failed",item.name);
                         continue;
-    
-                    if(!(await matchesContent(fullPath,query)))
-                        continue;
+                    }
+                    console.log("Content match Passed",item.name);
     
                     results.push({
                         name : item.name,
@@ -279,6 +301,8 @@ export async function searchFiles(filters){ //"filters" is the json return by th
             }
         } catch (error){
             console.log("Skipped...Something goes wrong, May be no permission",dirPath);
+            console.log("Reason of the catch block : ",error);
+            
             
         }
         return results;
@@ -294,7 +318,7 @@ export async function searchFiles(filters){ //"filters" is the json return by th
 
                 case 'name':
                     return a.name.toLowerCase()
-                    .localCompare(b.name.toLowerCase()) * order;
+                    .localeCompare(b.name.toLowerCase()) * order;
                 case 'size':
                     return (a.size - b.size) * order;
                 case 'created' :
@@ -308,10 +332,86 @@ export async function searchFiles(filters){ //"filters" is the json return by th
     };
 
     const applyLimites = (results,query) => {
-        if(query.limit === null && query.limit === undefined)
+        if(query.limit === null)
             return results;
         return results.slice(0,query.limit);
     }
+    const normalizedQuery = normalizeFilter(filters);
 
+    const searchRoot = getSearchRoot(normalizedQuery);
+
+    console.log("The rooot : ",searchRoot);
+
+    let results = await scanDirectory(searchRoot, normalizedQuery);
+
+    if(results.length === 0 && !normalizedQuery.drive){
+
+        const fallbackDrives = ["D:", "E:", "F:"];
+
+        for(const drive of fallbackDrives){
+
+            try{
+
+                console.log("Trying drive:", drive);
+
+                results = await scanDirectory(
+                    drive + "\\",
+                    normalizedQuery,
+                    []
+                );
+
+                if(results.length > 0){
+                    console.log("Found results in:", drive);
+                    break;
+                }
+
+            }
+            catch(err){
+                continue;
+            }
+        }
+    }
+
+    const sortedResults = sortResults(results, normalizedQuery);
+
+    const finalResults = applyLimites(sortedResults, normalizedQuery);
+
+    return finalResults;
 }
+
 //searchFiles(); //for test
+
+
+
+
+
+
+
+
+//For test
+const query = {
+    includeFileTypes: [".txt"],
+    excludeFileTypes: [],
+    filenameKeywords: ["hello"],
+    contentKeywords: ["hello"],
+
+    createdFrom: null,
+    createdTo: null,
+
+    modifiedFrom: null,
+    modifiedTo: null,
+
+    minSizeMB: null,
+    maxSizeMB: null,
+
+    sortBy: "name",
+    sortOrder: "asc",
+
+    limit: 5
+};
+console.time("Search");
+const results = await searchFiles(query);
+console.timeEnd("Search");
+
+console.log("Results Found:", results.length);
+console.log(results);
