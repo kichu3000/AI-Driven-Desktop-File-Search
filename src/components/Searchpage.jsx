@@ -10,9 +10,12 @@ import Result from "./Result";
 
 
 function SearchPage(){
+    const[results,setResults] = useState([]);
     const[loading,setLoading] = useState(false)
     const[query,setQuery] = useState("");
     const[currentPlaceholder,setCurrentPlaceholder] = useState("");
+
+    
 
     function getRandomPlaceholder(){
             const randomIndex = Math.floor(Math.random() * placeholder.placeholders.length);
@@ -26,14 +29,25 @@ function SearchPage(){
 
     
     const handleSearch = async () => {
+        
         setLoading(true)
         const start = Date.now();
         try{
-            const result = await searchApi(
-                "give me all the bigger mp3 files"
+            const aiQuery = await searchApi(
+                "all pdf from E drive that contains the word semester"
             );
-            //searchFiles(); // for test
-            console.log(result);
+            if (!aiQuery) {
+                console.error("AI query generation failed");
+                return;
+            }
+            if (!window?.electronAPI?.searchFiles) {
+                console.error("Electron API unavailable. Are you running in Electron?");
+                return;
+            }
+            console.log(aiQuery);
+            const files = await window.electronAPI.searchFiles(aiQuery);
+            setResults(files);
+            console.log(files);
         }
         catch(error){
             console.error(error);
