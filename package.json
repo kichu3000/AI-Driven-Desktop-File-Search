@@ -15,7 +15,7 @@
     "dotenv": "^17.4.2",
     "file-icons-js": "github:websemantics/file-icons-js",
     "lucide-react": "^1.17.0",
-    "pdf-parse": "^2.4.5",
+    "pdf-parse": "^1.1.4",
     "react": "^19.2.6",
     "react-dom": "^19.2.6",
     "react-file-icon": "^1.6.0",

@@ -1,10 +1,7 @@
 import * as fs from "node:fs/promises"
 import path from "node:path"
 import os, { homedir } from "node:os"
-
-import { createRequire } from "node:module";
-const require = createRequire(import.meta.url);
-const pdf = require("pdf-parse");
+import pdf from "pdf-parse";
 
 const searchQuerySchema = {
         drive: null,
@@ -163,6 +160,18 @@ export async function searchFiles(filters){ //"filters" is the json return by th
         return false;        
     }
 
+    const getPdfText = async (filePath) => {
+        try {
+            const buffer = await fs.readFile(filePath);
+            const data = await pdf(buffer);
+
+            return data.text || "";
+        } catch (err) {
+            console.log("PDF parser failed:", filePath, err.message);
+            return "";
+        }
+    };
+
 
     const matchesContent = async (filePath,query) => { // Returns true only if ALL keywords in the query exist in the file content.
         if(query.contentKeywords.length === 0 || !query.contentKeywords || query.contentKeywords[0] === "") return true;
@@ -172,9 +181,9 @@ export async function searchFiles(filters){ //"filters" is the json return by th
             let text = "";
 
             if (ext === ".pdf") {//Just for the PDF only
-                const buffer = await fs.readFile(filePath);
-                const data = await pdf(buffer);
-                text = data.text || "";
+                text = await getPdfText(filePath);
+
+                if(!text) return false;
             }
 
             else { // Other files such as .txt, .c, .js, .java, etc.... go here. These are compatible with UTF-8 encoding.
@@ -446,10 +455,11 @@ export async function searchFiles(filters){ //"filters" is the json return by th
 
 //For test
 const query = {
-    includeFileTypes: [],
+    drive :"E",
+    includeFileTypes: [".pdf"],
     excludeFileTypes: [],
     filenameKeywords: [],
-    contentKeywords: ["excludeFileTypes"],
+    contentKeywords: ["PECST525"],
 
     createdFrom: null,
     createdTo: null,
