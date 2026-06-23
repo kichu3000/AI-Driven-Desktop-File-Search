@@ -459,7 +459,7 @@ const query = {
     includeFileTypes: [".pdf"],
     excludeFileTypes: [],
     filenameKeywords: [],
-    contentKeywords: ["PECST525"],
+    contentKeywords: [""],
 
     createdFrom: null,
     createdTo: null,
