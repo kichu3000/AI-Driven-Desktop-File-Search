@@ -1,17 +1,17 @@
 import "./Resultcard.css";
 
-function ResultCard() {
+function ResultCard({file}) {
     return (
         <div className="result-card adaptive-hover">
             <div className="card-header">
-                <h3 className="file-name">token_validator.py</h3>
-                <span className="file-size">1.8 KB</span>
+                <h3 className="file-name">{file.name}</h3>
+                <span className="file-size">{(file.size / 1024).toFixed(2)}KB</span>
             </div>
 
             <p
                 className="file-path"
-                title="/Users/alex/scripts/auth/token_validator.py">
-                /Users/alex/scripts/auth/token_validator.py
+                title={file.path}>
+                {file.path}
             </p>
 
             <div className="button-group">

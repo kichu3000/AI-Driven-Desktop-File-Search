@@ -1,19 +1,21 @@
 import "./Nointernet.css";
 
-function NoInternet() {
+function NoInternet({onRetry}) {
     return (
     <div className="no-internet-container">
         <div className="result-card no-internet-card">
             <h3 className="no-internet-title">
-                No internet connection
+                Search failed.
             </h3>
 
             <p className="no-internet-text">
-                Check your connection and try again.
+                Please check your internet connection or try again later. The AI service may be temporarily unavailable.
             </p>
 
             <div className="button-group">
-                <button className="btn btn-primary">
+                <button className="btn btn-primary"
+                        onClick={onRetry}
+                    >
                     Retry
                 </button>
             </div>

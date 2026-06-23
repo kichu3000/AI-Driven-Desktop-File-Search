@@ -14,6 +14,7 @@ function SearchPage(){
     const[loading,setLoading] = useState(false)
     const[query,setQuery] = useState("");
     const[currentPlaceholder,setCurrentPlaceholder] = useState("");
+    const[error,setError] = useState(false)
 
     
 
@@ -29,19 +30,34 @@ function SearchPage(){
 
     
     const handleSearch = async () => {
-        
+        setResults([]);
+        setError(false)
         setLoading(true)
         const start = Date.now();
         try{
-            const aiQuery = await searchApi(
-                "all pdf from E drive that contains the word semester"
-            );
+            // const aiQuery = await searchApi(
+            //     "all pdf from E drive that contains the word semester"
+            // );
+const aiQuery = { // For testing remove later
+    drive : "E",
+    includeFileTypes: ['.pdf'],
+    excludeFileTypes: [],
+    filenameKeywords: [],
+    contentKeywords: ['aspire'],
+
+    createdFrom: null,
+    createdTo: null,
+
+    modifiedFrom: null,
+    modifiedTo: null,
+
+    minSizeMB: null,
+    maxSizeMB: null,
+
+};
             if (!aiQuery) {
                 console.error("AI query generation failed");
-                return;
-            }
-            if (!window?.electronAPI?.searchFiles) {
-                console.error("Electron API unavailable. Are you running in Electron?");
+                setError(true)
                 return;
             }
             console.log(aiQuery);
@@ -51,6 +67,8 @@ function SearchPage(){
         }
         catch(error){
             console.error(error);
+            setError(true)
+            setResults([]);
         }
         finally{
             setLoading(false)
@@ -59,7 +77,13 @@ function SearchPage(){
         }
         
     }
+    useEffect(() => {
+        const delay = setTimeout(() => {
+            if (query) handleSearch();
+        }, 500);
 
+        return () => clearTimeout(delay);
+    }, [query]);
 
 
     return(
@@ -90,7 +114,12 @@ function SearchPage(){
 
             </div>
         </div>
-        <Result loading={loading} />
+        <Result 
+        loading = {loading}
+        results = {results}
+        error = {error}
+        onRetry = {handleSearch}
+        />
     </>
     )
 }
