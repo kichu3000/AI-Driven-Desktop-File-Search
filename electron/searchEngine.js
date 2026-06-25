@@ -23,7 +23,7 @@ const searchQuerySchema = {
 
 export async function searchFiles(filters){ //"filters" is the json return by the AI api.
 
-    console.log("This is what we getting.. :",filters);
+    // console.log("This is what we getting.. :",filters);
 
     if (!filters || typeof filters !== "object" || Object.keys(filters).length === 0) {
         console.log("Invalid or empty filters from AI - blocking full disk scan");
@@ -123,24 +123,13 @@ export async function searchFiles(filters){ //"filters" is the json return by th
             if(!cleaned.drive.endsWith(':'))
                 cleaned.drive += ':';
         }
+        //Set default value for the limit.
+        if (cleaned.limit === null || cleaned.limit === undefined) {
+            cleaned.limit = 75;
+        }
         return cleaned;
     }
 
-    //Removed
-    // const getSearchRoot = (query) => {//For the starting of search
-    //     const home = os.homedir()
-    //     if(query.drive && query.folder){
-    //         return path.join(query.drive,query.folder);
-    //     }
-    //     if(query.drive){
-    //         return query.drive + "\\"
-    //     }
-
-    //     if(query.folder) {
-    //         return path.join(home,query.folder);
-    //     }
-    //     return home;
-    // }
 
     const matchesFileType = (filename,query) => {   //This function is to returns a boolean based on the includeFileTypes,excludeFileTypes arrays.
         const binaryExtensions = [".grp", ".exe", ".dll", ".bin", ".dat", ".pak"];
@@ -293,7 +282,21 @@ export async function searchFiles(filters){ //"filters" is the json return by th
             "tmp",
             "VirtualBox VMs",
             ".gradle",
-            "target"
+            "target",
+            "C:\\Windows\\Installer",
+            "C:\\Windows\\WinSxS",
+            "C:\\Windows\\SoftwareDistribution",
+            "C:\\Users\\Default",
+            "C:\\Users\\Public",
+
+            ".gitignore",
+            ".env",
+            ".next",
+            ".nuxt",
+            ".svelte-kit",
+            "coverage",
+            ".pytest_cache",
+            ".mypy_cache"
         ];
 
         try {
@@ -336,11 +339,11 @@ export async function searchFiles(filters){ //"filters" is the json return by th
                         continue;
                     }
     
-                    if(!matchesFileName(item.name,query)){
-                        console.log("Name failed",item.name);
-                        continue;
-                    }
-                    console.log("Name passed",item.name);
+                    // if(!matchesFileName(item.name,query)){
+                    //     console.log("Name failed",item.name);
+                    //     continue;
+                    // }
+                    // console.log("Name passed",item.name);
 
                     if(!matchesFileSize(stats,query)){
                         console.log("Size failed",item.name);
@@ -361,11 +364,20 @@ export async function searchFiles(filters){ //"filters" is the json return by th
                     }
                     console.log("modified date passed",item.name);
     
-                    if(!(await matchesContent(fullPath,query))){
-                        console.log("Content match failed",item.name);
+                    // if(!(await matchesContent(fullPath,query))){
+                    //     console.log("Content match failed",item.name);
+                    //     continue;
+                    // }
+                    // console.log("Content match Passed",item.name);
+
+                    const nameMatch = matchesFileName(item.name, query);
+                    const contentMatch = await matchesContent(fullPath, query);
+
+                    if (!nameMatch && !contentMatch) {
+                        console.log("No semantic match", item.name);
                         continue;
                     }
-                    console.log("Content match Passed",item.name);
+
                     
                     console.log("PASSED FILE:", fullPath);
                     results.push({
@@ -464,51 +476,3 @@ export async function searchFiles(filters){ //"filters" is the json return by th
     return finalResults;
 }
 
-//searchFiles(); //for test
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-//For test
-// const query = { // For testing remove later
-//     includeFileTypes: [".mp4"],
-//     excludeFileTypes: [],
-//     filenameKeywords: [],
-//     contentKeywords: [],
-
-//     createdFrom: null,
-//     createdTo: null,
-
-//     modifiedFrom: null,
-//     modifiedTo: null,
-
-//     minSizeMB: null,
-//     maxSizeMB: null,
-
-//     sortBy: "name",
-//     sortOrder: "asc",
-// };
-// console.time("Search");
-// const results = await searchFiles(query);
-// console.timeEnd("Search");
-
-// console.log("Results Found:", results.length);
-// console.log(results);

@@ -1,6 +1,6 @@
 import "./Nointernet.css";
 
-function NoInternet({onRetry}) {
+function NoInternet({onRetry , message}) {
     return (
     <div className="no-internet-container">
         <div className="result-card no-internet-card">
@@ -9,7 +9,7 @@ function NoInternet({onRetry}) {
             </h3>
 
             <p className="no-internet-text">
-                Please check your internet connection or try again later. The AI service may be temporarily unavailable.
+                {message}
             </p>
 
             <div className="button-group">

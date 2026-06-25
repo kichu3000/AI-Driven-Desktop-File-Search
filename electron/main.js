@@ -1,4 +1,4 @@
-import { app, BrowserWindow, ipcMain } from "electron";
+import { app, BrowserWindow, ipcMain ,shell } from "electron";
 import { searchFiles } from "./searchEngine.js";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
@@ -33,4 +33,26 @@ app.on("window-all-closed", () => {
 
 ipcMain.handle("search-files", async (_, query) => {
     return await searchFiles(query);
+});
+
+ipcMain.handle("open-file", async (event, filePath) => {
+    try {
+        console.log("OPEN REQUEST",filePath);
+        await shell.openPath(filePath);
+        return true;
+    } catch (err) {
+        console.error("Failed to open file:", err);
+        return false;
+    }
+});
+
+ipcMain.handle("show-in-folder", async (event, filePath) => {
+    try {
+        console.log("SHOW REQUEST",filePath);
+        shell.showItemInFolder(filePath);
+        return true;
+    } catch (err) {
+        console.error("Failed to show file:", err);
+        return false;
+    }
 });

@@ -10,11 +10,11 @@ import Result from "./Result";
 
 
 function SearchPage(){
-    const[results,setResults] = useState([]);
-    const[loading,setLoading] = useState(false)
-    const[query,setQuery] = useState("");
-    const[currentPlaceholder,setCurrentPlaceholder] = useState("");
-    const[error,setError] = useState(false)
+    const[results,setResults] = useState([]); //Used to store the results return by the seachFile function.The final result.
+    const[loading,setLoading] = useState(false) //Used to set the loading status.
+    const[query,setQuery] = useState(""); //Used to store whatever the user typed in the search box.
+    const[currentPlaceholder,setCurrentPlaceholder] = useState(""); //Used for the placeholder.
+    const[error,setError] = useState(null) //Used to set the Error states.
 
     
 
@@ -35,39 +35,23 @@ function SearchPage(){
         setLoading(true)
         const start = Date.now();
         try{
-            // const aiQuery = await searchApi(
-            //     "all pdf from E drive that contains the word semester"
-            // );
-const aiQuery = { // For testing remove later
-    drive : "E",
-    includeFileTypes: ['.pdf'],
-    excludeFileTypes: [],
-    filenameKeywords: [],
-    contentKeywords: ['aspire'],
-
-    createdFrom: null,
-    createdTo: null,
-
-    modifiedFrom: null,
-    modifiedTo: null,
-
-    minSizeMB: null,
-    maxSizeMB: null,
-
-};
-            if (!aiQuery) {
-                console.error("AI query generation failed");
-                setError(true)
+            const response = await searchApi(query);
+            if (!response.success) {
+                setError(response.error);
                 return;
             }
+            const aiQuery = response.data
             console.log(aiQuery);
             const files = await window.electronAPI.searchFiles(aiQuery);
             setResults(files);
             console.log(files);
         }
         catch(error){
-            console.error(error);
-            setError(true)
+            if (error.message === "Failed to fetch") {
+                setError("No internet connection. Please check your network and try again.");
+            } else {
+                setError(error.message);
+            }
             setResults([]);
         }
         finally{
@@ -77,15 +61,6 @@ const aiQuery = { // For testing remove later
         }
         
     }
-    useEffect(() => {
-        const delay = setTimeout(() => {
-            if (query) handleSearch();
-        }, 500);
-
-        return () => clearTimeout(delay);
-    }, [query]);
-
-
     return(
     <>
         <div className="container">
@@ -108,7 +83,12 @@ const aiQuery = { // For testing remove later
                         />
                     </div>
                     <div className="button">
-                        <button onClick={handleSearch}> <Search size={16} /> Search</button>
+                        <button 
+                        onClick={handleSearch}
+                        disabled={loading}
+                        > <Search size={16} />
+                        {loading ? "Searching..." : "Search"}
+                        </button>
                     </div>
                 </div>
 

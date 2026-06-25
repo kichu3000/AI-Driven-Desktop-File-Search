@@ -16,7 +16,10 @@ function Result({ loading , results , error , onRetry }) {
     if (error) {
         return (
             <div className="results-container">
-                <NoInternet onRetry={onRetry} />
+                <NoInternet
+                    message={error}
+                    onRetry={onRetry}
+                />
             </div>
         );
     }

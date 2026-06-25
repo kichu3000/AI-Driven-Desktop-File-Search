@@ -15,7 +15,7 @@ function ResultCard({file}) {
             </p>
 
             <div className="button-group">
-                <button className="btn btn-primary">
+                <button className="btn btn-primary" onClick={() => window.electronAPI.openFile(file.path)}>
                     <svg
                         xmlns="http://www.w3.org/2000/svg"
                         fill="none"
@@ -33,7 +33,7 @@ function ResultCard({file}) {
                     Open File
                 </button>
 
-                <button className="btn btn-secondary">
+                <button className="btn btn-secondary" onClick={() => window.electronAPI.showInFolder(file.path)}>
                     <svg
                         xmlns="http://www.w3.org/2000/svg"
                         fill="none"
