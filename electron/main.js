@@ -22,7 +22,13 @@ function createWindow() {
     });
     console.log("Loading Electron preload:", preloadPath);
 
-    win.loadURL("http://localhost:5173");
+    const isDev = !app.isPackaged;
+
+    if (isDev) {
+        win.loadURL("http://localhost:5173");
+    } else {
+        win.loadFile(path.join(__dirname, "../dist/index.html"));
+    }
 }
 
 app.whenReady().then(createWindow);
