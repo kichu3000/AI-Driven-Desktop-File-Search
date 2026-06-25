@@ -9,7 +9,7 @@ A desktop application built with Electron, React, and Vite that allows users to 
 -  Open files directly from search results
 -  Show files in their containing folder
 
-## Screenshots
+## Screenshot
 
 ![File Search main interface](https://github.com/kichu3000/AI-Driven-Desktop-File-Search/blob/0b30eb31bc687e8edb508cb0c469083c4acc758d/image.png)
 
