@@ -1,8 +1,6 @@
 
 let requestCount = 0;
 export async function searchApi(userInput){
-    requestCount++;
-    console.log("API request count : ",requestCount);
     
     const url = "https://openrouter.ai/api/v1/chat/completions";
     
