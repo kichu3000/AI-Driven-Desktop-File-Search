@@ -3,6 +3,7 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
+  "main": "electron/main.js",
   "scripts": {
     "dev": "vite --host",
     "electron": "electron electron/main.js",
@@ -42,10 +43,15 @@
     "productName": "AI File Search",
     "directories": {
       "output": "dist-electron"
-  },
-  "win": {
-    "icon": "electron/assets/icon.ico",
-    "target": "nsis"
+    },
+    "files": [
+      "electron/**/*",
+      "dist/**/*",
+      "package.json"
+    ],
+    "win": {
+      "icon": "electron/icon/icon.ico",
+      "target": "nsis"
+    }
   }
-}
 }
